@@ -59,7 +59,7 @@ const CandidateDetailView: React.FC<CandidateDetailViewProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="sticky top-0 bg-[var(--card)]/95 backdrop-blur-sm border-b border-[var(--border)] p-6 rounded-t-2xl">
+        <div className="bg-[var(--card)] border-b border-[var(--border)] p-6 rounded-t-2xl">
           <div className="flex items-start justify-between">
             <div className="flex items-start space-x-4">
               <div className="w-16 h-16 bg-gradient-to-br from-[var(--primary)] to-[var(--border)] rounded-xl flex items-center justify-center text-[var(--primary-foreground)] font-bold text-2xl shadow-lg">
@@ -74,7 +74,6 @@ const CandidateDetailView: React.FC<CandidateDetailViewProps> = ({
                   </span>
                   <span>•</span>
                   <span className="flex items-center space-x-1 font-semibold text-[var(--secondary)]">
-                    <DollarSignIcon size={14} />
                     <span>{formatSalary(applicant.annual_salary_expectation["full-time"])}</span>
                   </span>
                 </div>

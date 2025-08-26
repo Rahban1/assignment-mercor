@@ -1,0 +1,8 @@
+{
+  "routes": [
+    {
+      "src": "/applicants.json",
+      "headers": { "cache-control": "s-maxage=86400" }
+    }
+  ]
+}

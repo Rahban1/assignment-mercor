@@ -20,12 +20,33 @@ function App() {
         console.log('Fetching applicant data...');
         const response = await fetch('/applicants.json');
         console.log('Response status:', response.status);
+        console.log('Response ok:', response.ok);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const json = await response.json();
-        console.log('Loaded data:', json.length, 'applicants');
-        setData(json);
+        console.log('Loaded data:', json?.length || 0, 'applicants');
+        console.log('First applicant:', json?.[0]);
+        setData(json || []);
       } catch (error) {
         console.error('Failed to load applicant data:', error);
-        setData([]);
+        // Try with full URL as fallback
+        try {
+          console.log('Trying fallback URL...');
+          const fallbackResponse = await fetch(`${window.location.origin}/applicants.json`);
+          if (fallbackResponse.ok) {
+            const fallbackJson = await fallbackResponse.json();
+            console.log('Fallback loaded:', fallbackJson?.length || 0, 'applicants');
+            setData(fallbackJson || []);
+          } else {
+            setData([]);
+          }
+        } catch (fallbackError) {
+          console.error('Fallback also failed:', fallbackError);
+          setData([]);
+        }
       }
     }
     loadSampleData();

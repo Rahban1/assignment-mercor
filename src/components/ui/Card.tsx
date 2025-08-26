@@ -1,10 +1,13 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 interface CardProps {
   children: React.ReactNode;
   className?: string;
-  variant?: 'default' | 'bordered' | 'elevated';
+  variant?: 'default' | 'bordered' | 'elevated' | 'glass' | 'gradient';
   padding?: 'none' | 'sm' | 'md' | 'lg';
+  interactive?: boolean;
+  delay?: number;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -12,25 +15,77 @@ const Card: React.FC<CardProps> = ({
   className = '',
   variant = 'default',
   padding = 'md',
+  interactive = false,
+  delay = 0,
 }) => {
-  const baseClasses = 'bg-white rounded-lg';
+  const baseClasses = 'bg-white rounded-xl border backdrop-blur-sm';
   
   const variantClasses = {
-    default: 'border border-gray-200',
-    bordered: 'border-2 border-gray-300',
-    elevated: 'shadow-lg border border-gray-100',
+    default: 'border-slate-200/50 shadow-sm hover:shadow-md transition-all duration-300',
+    bordered: 'border-2 border-slate-300/60 shadow-sm',
+    elevated: 'shadow-xl border-slate-100/80 hover:shadow-2xl transition-all duration-300',
+    glass: 'glass border-white/20',
+    gradient: 'gradient-subtle border-slate-200/40 shadow-lg',
   };
   
   const paddingClasses = {
     none: '',
-    sm: 'p-3',
+    sm: 'p-2',
     md: 'p-4',
     lg: 'p-6',
   };
   
-  const classes = `${baseClasses} ${variantClasses[variant]} ${paddingClasses[padding]} ${className}`;
+  const interactiveClasses = interactive 
+    ? 'card-interactive hover-lift cursor-pointer' 
+    : '';
   
-  return <div className={classes}>{children}</div>;
+  const classes = `${baseClasses} ${variantClasses[variant]} ${paddingClasses[padding]} ${interactiveClasses} ${className}`;
+  
+  const cardVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 20,
+      scale: 0.95
+    },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.4,
+        delay,
+        ease: [0.25, 0.25, 0, 1]
+      }
+    },
+    hover: {
+      y: -4,
+      scale: 1.02,
+      transition: {
+        duration: 0.2,
+        ease: "easeOut"
+      }
+    },
+    tap: {
+      scale: 0.98,
+      transition: {
+        duration: 0.1
+      }
+    }
+  };
+
+  return (
+    <motion.div 
+      className={classes}
+      variants={cardVariants}
+      initial="hidden"
+      animate="visible"
+      whileHover={interactive ? "hover" : undefined}
+      whileTap={interactive ? "tap" : undefined}
+      layout
+    >
+      {children}
+    </motion.div>
+  );
 };
 
 interface CardHeaderProps {
@@ -42,19 +97,43 @@ const CardHeader: React.FC<CardHeaderProps> = ({
   children,
   className = '',
 }) => {
-  return <div className={`mb-4 ${className}`}>{children}</div>;
+  return (
+    <motion.div 
+      className={`mb-6 ${className}`}
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.1, duration: 0.3 }}
+    >
+      {children}
+    </motion.div>
+  );
 };
 
 interface CardTitleProps {
   children: React.ReactNode;
   className?: string;
+  gradient?: boolean;
 }
 
 const CardTitle: React.FC<CardTitleProps> = ({
   children,
   className = '',
+  gradient = false,
 }) => {
-  return <h3 className={`text-lg font-semibold text-gray-900 ${className}`}>{children}</h3>;
+  const titleClasses = gradient 
+    ? `text-xl font-bold text-gradient ${className}`
+    : `text-xl font-bold text-slate-900 ${className}`;
+
+  return (
+    <motion.h3 
+      className={titleClasses}
+      initial={{ opacity: 0, x: -10 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: 0.15, duration: 0.3 }}
+    >
+      {children}
+    </motion.h3>
+  );
 };
 
 interface CardContentProps {
@@ -66,7 +145,16 @@ const CardContent: React.FC<CardContentProps> = ({
   children,
   className = '',
 }) => {
-  return <div className={className}>{children}</div>;
+  return (
+    <motion.div 
+      className={`text-slate-700 ${className}`}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.2, duration: 0.3 }}
+    >
+      {children}
+    </motion.div>
+  );
 };
 
 interface CardFooterProps {
@@ -78,7 +166,16 @@ const CardFooter: React.FC<CardFooterProps> = ({
   children,
   className = '',
 }) => {
-  return <div className={`mt-4 ${className}`}>{children}</div>;
+  return (
+    <motion.div 
+      className={`mt-6 pt-4 border-t border-slate-100 ${className}`}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.25, duration: 0.3 }}
+    >
+      {children}
+    </motion.div>
+  );
 };
 
 export { CardHeader, CardTitle, CardContent, CardFooter };

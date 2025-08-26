@@ -16,39 +16,34 @@ function App() {
 
   useEffect(() => {
     async function loadSampleData() {
-      try {
-        console.log('Fetching applicant data...');
-        const response = await fetch('/applicants.json');
-        console.log('Response status:', response.status);
-        console.log('Response ok:', response.ok);
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const json = await response.json();
-        console.log('Loaded data:', json?.length || 0, 'applicants');
-        console.log('First applicant:', json?.[0]);
-        setData(json || []);
-      } catch (error) {
-        console.error('Failed to load applicant data:', error);
-        // Try with full URL as fallback
+      const urls = [
+        '/applicants.json',
+        `${window.location.origin}/applicants.json`
+      ];
+      
+      for (const url of urls) {
         try {
-          console.log('Trying fallback URL...');
-          const fallbackResponse = await fetch(`${window.location.origin}/applicants.json`);
-          if (fallbackResponse.ok) {
-            const fallbackJson = await fallbackResponse.json();
-            console.log('Fallback loaded:', fallbackJson?.length || 0, 'applicants');
-            setData(fallbackJson || []);
-          } else {
-            setData([]);
+          console.log(`Fetching applicant data from: ${url}`);
+          const response = await fetch(url);
+          
+          if (response.ok) {
+            const json = await response.json();
+            console.log('Loaded data:', json?.length || 0, 'applicants');
+            console.log('First applicant:', json?.[0]);
+            setData(json || []);
+            return;
           }
-        } catch (fallbackError) {
-          console.error('Fallback also failed:', fallbackError);
-          setData([]);
+          
+          console.warn(`Failed to fetch from ${url}: ${response.status}`);
+        } catch (error) {
+          console.error(`Failed to fetch from ${url}:`, error);
         }
       }
+      
+      console.warn('All fetch attempts failed, loading empty state');
+      setData([]);
     }
+    
     loadSampleData();
   }, []);
   

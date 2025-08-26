@@ -386,7 +386,7 @@ const Dashboard: React.FC = () => {
               style={{ boxShadow: 'var(--shadow-2xl)' }}
             >
               {/* Modal Header */}
-              <div className="bg-[var(--accent)] border-b border-[var(--border)] p-4 sm:p-6 flex-shrink-0 rounded-none sm:rounded-t-2xl">
+              <div className="bg-[var(--primary)] border-b border-[var(--border)] p-4 sm:p-6 flex-shrink-0 rounded-none sm:rounded-t-md">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 sm:gap-3">
                     <div className="w-7 h-7 sm:w-8 sm:h-8 bg-[var(--primary)] rounded-lg flex items-center justify-center">

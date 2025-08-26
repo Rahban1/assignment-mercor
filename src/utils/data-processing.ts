@@ -33,9 +33,11 @@ export async function processRawApplicants(rawData: unknown[]): Promise<{
       applicants.push(validatedApplicant);
       
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Unknown validation error";
+      console.error(`Validation error for applicant ${i}:`, errorMessage, rawItem);
       errors.push({
         index: i,
-        error: error instanceof Error ? error.message : "Unknown validation error",
+        error: errorMessage,
         data: rawItem,
       });
     }
@@ -47,14 +49,14 @@ export async function processRawApplicants(rawData: unknown[]): Promise<{
 /**
  * Transforms raw applicant data to expected format
  */
-function transformRawToApplicant(raw: RawApplicant, index: number): Partial<Applicant> {
+function transformRawToApplicant(raw: RawApplicant, index: number): any {
   return {
     id: raw.id || generateId(),
     name: raw.name || `Unknown Applicant ${index}`,
     email: raw.email || `unknown${index}@example.com`,
     phone: raw.phone || "",
     location: raw.location || "Unknown",
-    submitted_at: raw.submitted_at ? new Date(raw.submitted_at) : new Date(),
+    submitted_at: raw.submitted_at || new Date().toISOString(),
     work_availability: (raw.work_availability || ["full-time"]) as WorkAvailability[],
     annual_salary_expectation: raw.annual_salary_expectation || { "full-time": "$0" },
     work_experiences: (raw.work_experiences || []).map(exp => ({
@@ -68,8 +70,8 @@ function transformRawToApplicant(raw: RawApplicant, index: number): Partial<Appl
         subject: deg.subject || "Unknown Subject",
         school: deg.school || "Unknown School",
         gpa: deg.gpa || "Unknown",
-        startDate: new Date(deg.startDate || "2020-01-01"),
-        endDate: new Date(deg.endDate || "2024-01-01"),
+        startDate: deg.startDate || "2020",
+        endDate: deg.endDate || "2024",
         originalSchool: deg.originalSchool || deg.school || "Unknown School",
         isTop50: deg.isTop50 || false,
         isTop25: deg.isTop25,

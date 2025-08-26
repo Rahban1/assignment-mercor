@@ -49,7 +49,7 @@ export async function processRawApplicants(rawData: unknown[]): Promise<{
 /**
  * Transforms raw applicant data to expected format
  */
-function transformRawToApplicant(raw: RawApplicant, index: number): any {
+function transformRawToApplicant(raw: RawApplicant, index: number): unknown {
   return {
     id: raw.id || generateId(),
     name: raw.name || `Unknown Applicant ${index}`,

@@ -313,9 +313,21 @@ function applyFiltersAndSorting(
   selected: Record<string, SelectedCandidate>
 ): Applicant[] {
   const filtered = applicants.filter(applicant => {
-    // Search filter
-    if (filters.search && !applicant.name.toLowerCase().includes(filters.search.toLowerCase())) {
-      return false;
+    // Search filter - search across name, skills, company, and education
+    if (filters.search) {
+      const searchTerm = filters.search.toLowerCase();
+      const searchableText = [
+        applicant.name,
+        ...applicant.skills,
+        ...applicant.work_experiences.map(exp => `${exp.company} ${exp.roleName}`),
+        applicant.education.highest_level,
+        ...applicant.education.degrees.map(deg => `${deg.degree} ${deg.subject} ${deg.school}`),
+        applicant.location
+      ].join(' ').toLowerCase();
+      
+      if (!searchableText.includes(searchTerm)) {
+        return false;
+      }
     }
     
     // Location filter
@@ -331,6 +343,22 @@ function applyFiltersAndSorting(
     
     // Experience filter
     if (applicant.work_experiences.length < filters.minExperience) {
+      return false;
+    }
+    
+    // Education level filter
+    if (filters.educationLevel.length && 
+        !filters.educationLevel.includes(applicant.education.highest_level)) {
+      return false;
+    }
+    
+    // Skills filter - check if applicant has any of the required skills
+    if (filters.skills.length && 
+        !filters.skills.some(skill => 
+          applicant.skills.some(applicantSkill => 
+            applicantSkill.toLowerCase().includes(skill.toLowerCase())
+          )
+        )) {
       return false;
     }
     

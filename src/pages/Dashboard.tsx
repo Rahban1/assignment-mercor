@@ -106,6 +106,21 @@ const Dashboard: React.FC = () => {
   const shortlistCount = getShortlistCount();
   const selectedCount = getSelectedCount();
 
+  // Calculate active filters count for floating button
+  const getActiveFiltersCount = () => {
+    let count = 0;
+    if (filters.search) count++;
+    if (filters.locations.length > 0) count++;
+    if (filters.workAvailability.length > 0) count++;
+    if (filters.minExperience > 0) count++;
+    if (filters.maxSalary < 999999) count++;
+    if (filters.educationLevel.length > 0) count++;
+    if (filters.skills.length > 0) count++;
+    if (filters.isShortlisted !== null) count++;
+    if (filters.isSelected !== null) count++;
+    return count;
+  };
+
   // Calculate pagination
   const totalPages = Math.ceil(filteredApplicants.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -382,44 +397,59 @@ const Dashboard: React.FC = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed inset-0 sm:inset-4 md:inset-8 lg:inset-16 bg-[var(--card)] border-0 sm:border border-[var(--border)] rounded-none sm:rounded-2xl z-50 flex flex-col max-h-screen"
+              className="fixed inset-0 sm:inset-4 md:inset-y-8 md:inset-x-16 lg:inset-y-12 lg:inset-x-24 xl:inset-y-16 xl:inset-x-32 bg-[var(--card)] border-0 sm:border border-[var(--border)] rounded-none sm:rounded-2xl z-50 flex flex-col max-h-screen"
               style={{ boxShadow: 'var(--shadow-2xl)' }}
             >
               {/* Modal Header */}
-              <div className="bg-[var(--primary)] border-b border-[var(--border)] p-4 sm:p-6 flex-shrink-0 rounded-none sm:rounded-t-md">
+              <div className="bg-gradient-to-r from-[var(--card)] to-[var(--muted)] border-b border-[var(--border)] p-4 sm:p-6 flex-shrink-0 rounded-none sm:rounded-t-2xl backdrop-blur-sm">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 bg-[var(--primary)] rounded-lg flex items-center justify-center">
-                      <svg className="w-3 h-3 sm:w-4 sm:h-4 text-[var(--primary-foreground)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <motion.div 
+                      className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[var(--primary)] to-[var(--primary)]/80 rounded-xl shadow-lg flex items-center justify-center"
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    >
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--primary-foreground)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                       </svg>
+                    </motion.div>
+                    <div>
+                      <h2 className="text-xl sm:text-2xl font-bold text-[var(--foreground)]">Filter Candidates</h2>
+                      <p className="text-sm text-[var(--muted-foreground)] mt-1">Refine your search to find the perfect candidates</p>
                     </div>
-                    <h2 className="text-lg sm:text-xl font-semibold text-[var(--foreground)]">Filter Candidates</h2>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setIsFilterModalOpen(false)}
-                    className="p-1.5 sm:p-2 hover:bg-[var(--accent)] text-[var(--foreground)] rounded-lg transition-colors"
-                  >
-                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </Button>
+                  <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setIsFilterModalOpen(false)}
+                      className="p-2 sm:p-3 hover:bg-[var(--accent)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] rounded-xl transition-all duration-200 group"
+                    >
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6 group-hover:rotate-90 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </Button>
+                  </motion.div>
                 </div>
               </div>
 
               {/* Modal Content - Scrollable */}
-              <div className="flex-1 overflow-y-auto bg-[var(--card)] rounded-none sm:rounded-b-2xl">
-                <div className="p-4 sm:p-6">
+              <div className="flex-1 overflow-y-auto bg-[var(--card)] rounded-none sm:rounded-b-2xl scrollbar-thin scrollbar-thumb-[var(--primary)]/30 scrollbar-track-transparent hover:scrollbar-thumb-[var(--primary)]/50">
+                <motion.div 
+                  className="p-4 sm:p-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2, duration: 0.4 }}
+                >
                   <FilterPanel
                     filters={filters}
                     onFiltersChange={updateFilters}
                     filterOptions={filterOptions}
                     isCollapsed={false}
                     onToggleCollapse={() => setIsFilterModalOpen(false)}
+                    onModalClose={() => setIsFilterModalOpen(false)}
                   />
-                </div>
+                </motion.div>
               </div>
             </motion.div>
           </>
@@ -443,24 +473,55 @@ const Dashboard: React.FC = () => {
       </AnimatePresence>
 
       {/* Floating Filter Button */}
-      <motion.button
-        onClick={() => setIsFilterModalOpen(true)}
-        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-12 h-12 sm:w-14 sm:h-14 bg-[var(--primary)] text-[var(--primary-foreground)] rounded-full shadow-lg hover:shadow-xl transition-all duration-200 z-40 flex items-center justify-center group"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        style={{ boxShadow: 'var(--shadow-xl)' }}
-        aria-label="Open filters"
+      <motion.div
+        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.5, type: "spring", stiffness: 260, damping: 20 }}
       >
-        <svg className="w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-200 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-        </svg>
-        
-        {/* Tooltip - Only show on desktop */}
-        <div className="hidden sm:block absolute bottom-16 right-0 bg-[var(--popover)] border border-[var(--border)] text-[var(--popover-foreground)] px-3 py-2 rounded-lg text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
-          Filter Candidates
-          <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-[var(--border)]"></div>
-        </div>
-      </motion.button>
+        <motion.button
+          onClick={() => setIsFilterModalOpen(true)}
+          className="overflow-visible relative w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-[var(--primary)] to-[var(--primary)]/80 text-[var(--primary-foreground)] rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center justify-center group"
+          whileHover={{ scale: 1.1, rotate: 5 }}
+          whileTap={{ scale: 0.9 }}
+          style={{ boxShadow: 'var(--shadow-2xl)' }}
+          aria-label="Open filters"
+        >
+          {/* Background ripple effect */}
+          <motion.div
+            className="absolute inset-0 bg-white/20 rounded-full"
+            initial={{ scale: 0, opacity: 0 }}
+            whileHover={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          />
+          
+          <svg className="w-6 h-6 sm:w-7 sm:h-7 relative z-10 transition-transform duration-300 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+          </svg>
+          
+          {/* Active filter indicator */}
+          {getActiveFiltersCount() > 0 && (
+            <motion.div 
+              className="absolute -top-1 -right-1 w-6 h-6 bg-[var(--destructive)] text-white rounded-full text-xs font-bold flex items-center justify-center border-2 border-[var(--card)]"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            >
+              {getActiveFiltersCount()}
+            </motion.div>
+          )}
+          
+          {/* Tooltip - Only show on desktop */}
+          <motion.div 
+            className="hidden sm:block absolute bottom-20 right-0 bg-[var(--popover)] border border-[var(--border)] text-[var(--popover-foreground)] px-4 py-2 rounded-xl text-sm font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none shadow-lg"
+            initial={{ y: 10, opacity: 0 }}
+            whileHover={{ y: 0, opacity: 1 }}
+          >
+            Filter Candidates
+            <div className="absolute top-full right-6 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-[var(--border)]"></div>
+          </motion.div>
+        </motion.button>
+      </motion.div>
 
     </div>
   );

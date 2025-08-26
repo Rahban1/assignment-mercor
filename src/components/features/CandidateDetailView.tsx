@@ -6,6 +6,9 @@ import Button from '../ui/Button';
 import { BriefcaseIcon, RocketIcon, BarChartIcon, CalendarIcon, StarIcon, BookmarkIcon, SparklesIcon, MapPinIcon, DollarSignIcon, GraduationCapIcon, ZapIcon, ClockIcon, TrophyIcon } from '../ui/Icons';
 import type { Applicant, ApplicantScore } from '../../types/applicant.types';
 import { formatSalary, formatDate, formatName, formatLocation, calculateExperienceYears } from '../../utils/formatting';
+import { candidateManagementService } from '../../services/candidateManagement.service';
+import { skillsCategorizationService } from '../../services/skillsCategorization.service';
+import { scoreAnalysisService } from '../../services/scoreAnalysis.service';
 
 interface CandidateDetailViewProps {
   applicant: Applicant;
@@ -29,18 +32,26 @@ const CandidateDetailView: React.FC<CandidateDetailViewProps> = ({
   onClose,
 }) => {
   const handleShortlistToggle = () => {
-    if (isShortlisted && onRemoveFromShortlist) {
-      onRemoveFromShortlist(applicant.id);
-    } else if (!isShortlisted && onShortlist) {
-      onShortlist(applicant.id);
-    }
+    candidateManagementService.toggleShortlist(applicant.id, isShortlisted, {
+      onShortlist,
+      onRemoveFromShortlist
+    });
   };
 
   const handleSelect = () => {
-    if (onSelect) {
-      onSelect(applicant.id);
-    }
+    candidateManagementService.selectCandidate(applicant.id, {
+      onSelect
+    });
   };
+
+  // Get candidate status info for UI
+  const statusInfo = candidateManagementService.getCandidateStatusInfo(isShortlisted, isSelected);
+  
+  // Categorize skills
+  const categorizedSkills = skillsCategorizationService.categorizeSkills(applicant.skills);
+  
+  // Get score breakdown if score exists
+  const scoreBreakdown = score ? scoreAnalysisService.createScoreBreakdown(score) : null;
 
   return (
     <motion.div
@@ -203,10 +214,7 @@ const CandidateDetailView: React.FC<CandidateDetailViewProps> = ({
             </CardHeader>
             <CardContent>
               <div className="flex flex-wrap gap-2">
-                {applicant.skills.map((skill, idx) => {
-                  const isTechSkill = ['React', 'JavaScript', 'Python', 'Node', 'Docker', 'AWS']
-                    .some(tech => skill.toLowerCase().includes(tech.toLowerCase()));
-                  
+                {categorizedSkills.map((skillData, idx) => {
                   return (
                     <motion.div
                       key={idx}
@@ -215,12 +223,12 @@ const CandidateDetailView: React.FC<CandidateDetailViewProps> = ({
                       transition={{ delay: idx * 0.02 }}
                     >
                       <Badge 
-                        variant={isTechSkill ? "gradient" : "info"} 
+                        variant={skillData.isTech ? "gradient" : "info"} 
                         size="sm"
-                        glow={isTechSkill}
+                        glow={skillData.isTech}
                       >
-                        {isTechSkill && <RocketIcon size={14} className="mr-1" />}
-                        {skill}
+                        {skillData.isTech && <RocketIcon size={14} className="mr-1" />}
+                        {skillData.skill}
                       </Badge>
                     </motion.div>
                   );
@@ -240,26 +248,29 @@ const CandidateDetailView: React.FC<CandidateDetailViewProps> = ({
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {[
-                    { label: 'Experience', score: score.experienceScore, icon: <BriefcaseIcon size={12} /> },
-                    { label: 'Education', score: score.educationScore, icon: <GraduationCapIcon size={12} /> },
-                    { label: 'Skills', score: score.skillScore, icon: <ZapIcon size={12} /> },
-                    { label: 'Salary Fit', score: score.salaryScore, icon: <DollarSignIcon size={12} /> }
-                  ].map((item, idx) => (
-                    <motion.div 
-                      key={item.label}
-                      className="flex justify-between items-center p-4 border border-[var(--border)] rounded-lg"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: idx * 0.1 }}
-                    >
-                      <span className="text-[var(--foreground)] font-medium flex items-center space-x-2">
-                        <span>{item.icon}</span>
-                        <span>{item.label}</span>
-                      </span>
-                      <ScoreBadge score={item.score} showLabel={false} animated={false} />
-                    </motion.div>
-                  ))}
+                  {scoreBreakdown?.map((item, idx) => {
+                    const IconComponent = item.icon === 'briefcase' ? BriefcaseIcon : 
+                                         item.icon === 'graduation-cap' ? GraduationCapIcon :
+                                         item.icon === 'zap' ? ZapIcon :
+                                         item.icon === 'dollar-sign' ? DollarSignIcon : BriefcaseIcon;
+                    
+                    return (
+                      <motion.div 
+                        key={item.label}
+                        className="flex justify-between items-center p-4 border border-[var(--border)] rounded-lg"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: idx * 0.1 }}
+                        title={item.description}
+                      >
+                        <span className="text-[var(--foreground)] font-medium flex items-center space-x-2">
+                          <IconComponent size={12} />
+                          <span>{item.label}</span>
+                        </span>
+                        <ScoreBadge score={item.score} showLabel={false} animated={false} />
+                      </motion.div>
+                    );
+                  })}
                 </div>
               </CardContent>
             </Card>
@@ -298,19 +309,20 @@ const CandidateDetailView: React.FC<CandidateDetailViewProps> = ({
                 <Button
                   variant={isShortlisted ? "secondary" : "primary"}
                   onClick={handleShortlistToggle}
-                  icon={isShortlisted ? <StarIcon size={16} /> : <BookmarkIcon size={16} />}
+                  icon={statusInfo.shortlistIcon === 'star' ? <StarIcon size={16} /> : <BookmarkIcon size={16} />}
+                  disabled={!statusInfo.canShortlist}
                 >
-                  {isShortlisted ? "Remove from Shortlist" : "Add to Shortlist"}
+                  {statusInfo.shortlistButtonText}
                 </Button>
               )}
               
-              {isShortlisted && !isSelected && (
+              {statusInfo.canSelect && (
                 <Button
                   variant="gradient"
                   onClick={handleSelect}
                   icon={<SparklesIcon size={16} />}
                 >
-                  Select for Team
+                  {statusInfo.selectButtonText}
                 </Button>
               )}
             </div>

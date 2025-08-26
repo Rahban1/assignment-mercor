@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import Badge, { ScoreBadge, StatusBadge } from '../ui/Badge';
 import type { Applicant, ApplicantScore } from '../../types/applicant.types';
 import { formatSalary, formatName, formatLocation, calculateExperienceYears } from '../../utils/formatting';
+import { skillsCategorizationService } from '../../services/skillsCategorization.service';
 
 interface CandidateListItemProps {
   applicant: Applicant;
@@ -28,6 +29,7 @@ const CandidateListItem: React.FC<CandidateListItemProps> = ({
   };
 
   const topSkills = applicant.skills.slice(0, 3);
+  const categorizedTopSkills = skillsCategorizationService.categorizeSkills(topSkills);
 
   return (
     <motion.div
@@ -82,18 +84,15 @@ const CandidateListItem: React.FC<CandidateListItemProps> = ({
 
           {/* Skills Preview - Show on lg+ screens */}
           <div className="hidden lg:flex items-center gap-1 xl:gap-2 flex-wrap">
-            {topSkills.slice(0, 2).map((skill, idx) => {
-              const isTechSkill = ['React', 'JavaScript', 'Python', 'Node', 'Docker', 'AWS']
-                .some(tech => skill.toLowerCase().includes(tech.toLowerCase()));
-              
+            {categorizedTopSkills.slice(0, 2).map((skillData, idx) => {
               return (
                 <Badge 
                   key={idx} 
-                  variant={isTechSkill ? "gradient" : "info"} 
+                  variant={skillData.isTech ? "gradient" : "info"} 
                   size="xs"
-                  glow={isTechSkill}
+                  glow={skillData.isTech}
                 >
-                  {skill}
+                  {skillData.skill}
                 </Badge>
               );
             })}
@@ -132,24 +131,21 @@ const CandidateListItem: React.FC<CandidateListItemProps> = ({
 
         {/* Mobile Skills Preview - Show only on sm screens */}
         <div className="flex sm:hidden items-center gap-1 flex-wrap mt-2">
-          {topSkills.slice(0, 3).map((skill, idx) => {
-            const isTechSkill = ['React', 'JavaScript', 'Python', 'Node', 'Docker', 'AWS']
-              .some(tech => skill.toLowerCase().includes(tech.toLowerCase()));
-            
+          {categorizedTopSkills.map((skillData, idx) => {
             return (
               <Badge 
                 key={idx} 
-                variant={isTechSkill ? "gradient" : "info"} 
+                variant={skillData.isTech ? "gradient" : "info"} 
                 size="xs"
-                glow={isTechSkill}
+                glow={skillData.isTech}
               >
-                {skill}
+                {skillData.skill}
               </Badge>
             );
           })}
-          {applicant.skills.length > 3 && (
+          {applicant.skills.length > categorizedTopSkills.length && (
             <Badge variant="secondary" size="xs">
-              +{applicant.skills.length - 3}
+              +{applicant.skills.length - categorizedTopSkills.length}
             </Badge>
           )}
         </div>

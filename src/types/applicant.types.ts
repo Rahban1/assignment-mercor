@@ -27,7 +27,7 @@ export const RawApplicantSchema = z.object({
     id: z.string().optional(),
     name: z.string().optional(),
     email: z.string().optional(),
-    phone: z.string().optional(),
+    phone: z.string().optional().nullable(),
     location: z.string().optional(),
     submitted_at: z.string().optional(),
     work_availability: z.array(z.string()).optional(),

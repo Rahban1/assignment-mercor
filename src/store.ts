@@ -128,7 +128,7 @@ export const useHiringStore = create<HiringState>()(
           selectedAt: new Date(),
           position,
           reason,
-          diversityFactor: diversityFactor as any,
+          diversityFactor: diversityFactor as string,
         };
         set({ selected });
       },
@@ -278,7 +278,7 @@ function calculateSalaryScore(salary: Applicant["annual_salary_expectation"]): n
   const fullTimeSalary = salary["full-time"];
   if (!fullTimeSalary) return 50;
   
-  const amount = parseInt(fullTimeSalary.replace(/[\$,]/g, ""));
+  const amount = parseInt(fullTimeSalary.replace(/[$,]/g, ""));
   if (amount < 50000) return 100;
   if (amount < 80000) return 80;
   if (amount < 120000) return 60;
@@ -312,7 +312,7 @@ function applyFiltersAndSorting(
   shortlisted: Record<string, ShortlistedCandidate>,
   selected: Record<string, SelectedCandidate>
 ): Applicant[] {
-  let filtered = applicants.filter(applicant => {
+  const filtered = applicants.filter(applicant => {
     // Search filter
     if (filters.search && !applicant.name.toLowerCase().includes(filters.search.toLowerCase())) {
       return false;
@@ -335,7 +335,7 @@ function applyFiltersAndSorting(
     }
     
     // Salary filter
-    const salary = parseInt(applicant.annual_salary_expectation["full-time"]?.replace(/[\$,]/g, "") || "0");
+    const salary = parseInt(applicant.annual_salary_expectation["full-time"]?.replace(/[$,]/g, "") || "0");
     if (salary > filters.maxSalary) {
       return false;
     }
@@ -361,14 +361,14 @@ function applyFiltersAndSorting(
 
   // Apply sorting
   filtered.sort((a, b) => {
-    let aValue: any, bValue: any;
+    let aValue: string | number, bValue: string | number;
     
     if (sorting.key === "totalScore") {
       aValue = scores[a.id]?.totalScore || 0;
       bValue = scores[b.id]?.totalScore || 0;
     } else {
-      aValue = a[sorting.key as keyof Applicant];
-      bValue = b[sorting.key as keyof Applicant];
+      aValue = a[sorting.key as keyof Applicant] as string | number;
+      bValue = b[sorting.key as keyof Applicant] as string | number;
     }
     
     if (typeof aValue === "string" && typeof bValue === "string") {
@@ -377,7 +377,7 @@ function applyFiltersAndSorting(
         : bValue.localeCompare(aValue);
     }
     
-    return sorting.direction === "asc" ? aValue - bValue : bValue - aValue;
+    return sorting.direction === "asc" ? (aValue as number) - (bValue as number) : (bValue as number) - (aValue as number);
   });
   
   return filtered;
@@ -410,7 +410,7 @@ function calculateDiversityMetrics(applicants: Applicant[]): DiversityMetrics {
     }
     
     // Average salary
-    const salary = parseInt(applicant.annual_salary_expectation["full-time"]?.replace(/[\$,]/g, "") || "0");
+    const salary = parseInt(applicant.annual_salary_expectation["full-time"]?.replace(/[$,]/g, "") || "0");
     totalSalary += salary;
   });
 

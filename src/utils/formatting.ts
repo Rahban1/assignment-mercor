@@ -9,7 +9,7 @@ export function formatSalary(salary: string | undefined): string {
   if (!salary) return "Not specified";
   
   // Remove existing formatting
-  const cleanSalary = salary.replace(/[\$,]/g, "");
+  const cleanSalary = salary.replace(/[$,]/g, "");
   const amount = parseInt(cleanSalary);
   
   if (isNaN(amount) || amount === 0) return "Not specified";

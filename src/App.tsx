@@ -6,6 +6,7 @@ import { useHiringStore } from './store';
 import { processRawApplicants, normalizeSkills, normalizeSalaryExpectations } from './utils/data-processing';
 import Dashboard from './pages/Dashboard';
 import SelectionPage from './pages/SelectionPage';
+import ReportsPage from './pages/ReportsPage';
 import { ThemeProvider } from './contexts/ThemeContext';
 import './App.css';
 
@@ -17,7 +18,7 @@ function App() {
     async function loadSampleData() {
       try {
         console.log('Fetching applicant data...');
-        const response = await fetch("/applicants.json");
+        const response = await fetch('/applicants.json');
         console.log('Response status:', response.status);
         const json = await response.json();
         console.log('Loaded data:', json.length, 'applicants');
@@ -113,14 +114,7 @@ function App() {
           {/* Analytics/Reports Route */}
           <Route 
             path="/reports" 
-            element={
-              <div className="min-h-screen flex items-center justify-center">
-                <div className="text-center">
-                  <h2 className="text-2xl font-bold text-foreground mb-4">Reports & Analytics</h2>
-                  <p className="text-muted-foreground">This page will show hiring analytics and diversity reports</p>
-                </div>
-              </div>
-            } 
+            element={<ReportsPage />} 
           />
           
           {/* Redirect unknown routes to dashboard */}

@@ -54,7 +54,7 @@ function transformRawToApplicant(raw: RawApplicant, index: number): Partial<Appl
     phone: raw.phone || "",
     location: raw.location || "Unknown",
     submitted_at: raw.submitted_at ? new Date(raw.submitted_at) : new Date(),
-    work_availability: (raw.work_availability || ["full-time"]) as any,
+    work_availability: (raw.work_availability || ["full-time"]) as string[],
     annual_salary_expectation: raw.annual_salary_expectation || { "full-time": "$0" },
     work_experiences: (raw.work_experiences || []).map(exp => ({
       company: exp.company || "Unknown Company",

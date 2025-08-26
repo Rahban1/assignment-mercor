@@ -27,7 +27,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 }) => {
   const [localFilters, setLocalFilters] = useState<FilterState>(filters);
 
-  const handleInputChange = (field: keyof FilterState, value: any) => {
+  const handleInputChange = (field: keyof FilterState, value: string | number | boolean | string[] | null) => {
     const newFilters = { ...localFilters, [field]: value };
     setLocalFilters(newFilters);
   };

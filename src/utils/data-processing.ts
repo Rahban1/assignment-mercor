@@ -53,7 +53,7 @@ function transformRawToApplicant(raw: RawApplicant, index: number): Partial<Appl
     email: raw.email || `unknown${index}@example.com`,
     phone: raw.phone || "",
     location: raw.location || "Unknown",
-    submitted_at: raw.submitted_at || new Date().toISOString(),
+    submitted_at: raw.submitted_at ? new Date(raw.submitted_at) : new Date(),
     work_availability: (raw.work_availability || ["full-time"]) as any,
     annual_salary_expectation: raw.annual_salary_expectation || { "full-time": "$0" },
     work_experiences: (raw.work_experiences || []).map(exp => ({

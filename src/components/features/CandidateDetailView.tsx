@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import Card, { CardHeader, CardTitle, CardContent, CardFooter } from '../ui/Card';
+import Card, { CardHeader, CardTitle, CardContent } from '../ui/Card';
 import Badge, { ScoreBadge, StatusBadge } from '../ui/Badge';
 import Button from '../ui/Button';
 import { BriefcaseIcon, RocketIcon, BarChartIcon, CalendarIcon, StarIcon, BookmarkIcon, SparklesIcon, MapPinIcon, DollarSignIcon, GraduationCapIcon, ZapIcon, ClockIcon, TrophyIcon } from '../ui/Icons';
@@ -151,9 +151,6 @@ const CandidateDetailView: React.FC<CandidateDetailViewProps> = ({
                   >
                     <h4 className="font-semibold text-[var(--foreground)]">{exp.roleName}</h4>
                     <p className="text-[var(--primary)] font-medium">{exp.company}</p>
-                    {exp.description && (
-                      <p className="text-sm text-[var(--muted-foreground)] mt-2">{exp.description}</p>
-                    )}
                   </motion.div>
                 ))}
               </div>

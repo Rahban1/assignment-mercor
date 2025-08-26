@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 
 interface CardProps {
   children: React.ReactNode;
@@ -41,7 +41,7 @@ const Card: React.FC<CardProps> = ({
   
   const classes = `${baseClasses} ${variantClasses[variant]} ${paddingClasses[padding]} ${interactiveClasses} ${className}`;
   
-  const cardVariants = {
+  const cardVariants: Variants = {
     hidden: { 
       opacity: 0, 
       y: 20,
@@ -54,7 +54,7 @@ const Card: React.FC<CardProps> = ({
       transition: {
         duration: 0.4,
         delay,
-        ease: [0.25, 0.25, 0, 1]
+        ease: [0.25, 0.25, 0, 1] as [number, number, number, number]
       }
     },
     hover: {

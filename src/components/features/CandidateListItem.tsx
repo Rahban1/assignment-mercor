@@ -28,7 +28,6 @@ const CandidateListItem: React.FC<CandidateListItemProps> = ({
   };
 
   const topSkills = applicant.skills.slice(0, 3);
-  const remainingSkillsCount = Math.max(0, applicant.skills.length - topSkills.length);
 
   return (
     <motion.div

@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import type { boolean } from 'zod';
 
 interface ThemeContextType {
   isDarkMode: boolean;

@@ -1,7 +1,7 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, type Variants, type HTMLMotionProps } from 'framer-motion';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'ref'> {
   variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'ghost' | 'gradient';
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   isLoading?: boolean;
@@ -42,7 +42,7 @@ const Button: React.FC<ButtonProps> = ({
   
   const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
   
-  const buttonVariants = {
+  const buttonVariants: Variants = {
     hover: { 
       scale: 1.02,
     },
@@ -105,7 +105,7 @@ const Button: React.FC<ButtonProps> = ({
       variants={buttonVariants}
       whileHover="hover"
       whileTap="tap"
-      animate={isLoading ? "loading" : ""}
+      animate={isLoading ? "loading" : undefined}
       {...props}
     >
       {/* Ripple effect background */}

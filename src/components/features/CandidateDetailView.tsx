@@ -102,12 +102,12 @@ const CandidateDetailView: React.FC<CandidateDetailViewProps> = ({
         <div className="p-6 space-y-8">
           {/* Quick Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card variant="gradient" className="text-center">
+            <Card variant="elevated" className="text-center">
               <CardContent className="p-4">
-                <div className="text-2xl font-bold text-[var(--primary-foreground)]">
+                <div className="text-2xl font-bold text-[var(--foreground)]">
                   {applicant.work_experiences.length}
                 </div>
-                <div className="text-sm text-[var(--primary-foreground)]/80">Previous Roles</div>
+                <div className="text-sm text-[var(--muted-foreground)]/80">Previous Roles</div>
               </CardContent>
             </Card>
             <Card variant="elevated" className="text-center">
@@ -120,10 +120,10 @@ const CandidateDetailView: React.FC<CandidateDetailViewProps> = ({
             </Card>
             <Card variant="elevated" className="text-center">
               <CardContent className="p-4">
-                <div className="text-2xl font-bold text-slate-900">
+                <div className="text-2xl font-bold text-[var(--foreground)]">
                   {applicant.education.degrees.length}
                 </div>
-                <div className="text-sm text-slate-600">Degrees</div>
+                <div className="text-sm text-[var(--muted-foreground)]">Degrees</div>
               </CardContent>
             </Card>
           </div>

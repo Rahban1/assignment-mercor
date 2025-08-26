@@ -82,26 +82,26 @@ const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <motion.div
-      className={`flex flex-col items-center space-y-6 ${className}`}
+      className={`flex flex-col items-center gap-4 sm:gap-6 ${className}`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
       {/* Items info */}
-      <div className="text-center">
-        <div className="text-sm text-[var(--muted-foreground)] font-medium">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center w-full max-w-4xl gap-3 sm:gap-0">
+        <div className="text-xs sm:text-sm text-[var(--muted-foreground)] font-medium text-center sm:text-left">
           Showing <span className="font-semibold text-[var(--foreground)]">{startItem}</span> to{' '}
           <span className="font-semibold text-[var(--foreground)]">{endItem}</span> of{' '}
           <span className="font-semibold text-[var(--foreground)]">{totalItems}</span> candidates
         </div>
         
         {showItemsPerPage && onItemsPerPageChange && (
-          <div className="flex items-center justify-center space-x-2 mt-3">
-            <span className="text-sm text-[var(--muted-foreground)]">Show:</span>
+          <div className="flex items-center justify-center gap-2">
+            <span className="text-xs sm:text-sm text-[var(--muted-foreground)]">Show:</span>
             <select
               value={itemsPerPage}
               onChange={(e) => onItemsPerPageChange(parseInt(e.target.value))}
-              className="px-3 py-1 text-sm border border-[var(--border)] rounded-lg bg-[var(--card)] hover:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)] focus:border-[var(--primary)] transition-all duration-200"
+              className="px-2 py-1 sm:px-3 sm:py-1 text-xs sm:text-sm border border-[var(--border)] rounded-lg bg-[var(--card)] hover:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)] focus:border-[var(--primary)] transition-all duration-200"
             >
               {itemsPerPageOptions.map((option) => (
                 <option key={option} value={option}>
@@ -113,8 +113,8 @@ const Pagination: React.FC<PaginationProps> = ({
         )}
       </div>
 
-      {/* Navigation controls - Prominent Previous/Next */}
-      <div className="flex items-center justify-center space-x-6">
+      {/* Navigation controls - Responsive layout */}
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 w-full max-w-4xl">
         {/* Previous button */}
         <motion.div
           whileHover={{ scale: 1.02 }}
@@ -122,31 +122,31 @@ const Pagination: React.FC<PaginationProps> = ({
         >
           <Button
             variant={currentPage > 1 ? "primary" : "ghost"}
-            size="lg"
+            size="sm"
             onClick={handlePreviousPage}
             disabled={currentPage <= 1}
             icon={
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             }
-            className="px-6 py-3 font-semibold"
+            className="px-4 py-2 sm:px-6 sm:py-3 font-semibold w-full sm:w-auto"
           >
-            Previous
+            <span className="sm:inline">Previous</span>
           </Button>
         </motion.div>
 
         {/* Page indicator */}
-        <div className="flex items-center space-x-4">
-          <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl px-4 py-2 shadow-sm">
-            <span className="text-sm font-medium text-[var(--muted-foreground)]">Page</span>
-            <span className="text-lg font-bold text-[var(--primary)] mx-2">{currentPage}</span>
-            <span className="text-sm font-medium text-[var(--muted-foreground)]">of {totalPages}</span>
+        <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
+          <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl px-3 py-2 sm:px-4 sm:py-2 shadow-sm">
+            <span className="text-xs sm:text-sm font-medium text-[var(--muted-foreground)]">Page</span>
+            <span className="text-lg sm:text-lg font-bold text-[var(--primary)] mx-2">{currentPage}</span>
+            <span className="text-xs sm:text-sm font-medium text-[var(--muted-foreground)]">of {totalPages}</span>
           </div>
           
-          {/* Quick page navigation for nearby pages */}
+          {/* Quick page navigation for nearby pages - Hide on mobile if too many pages */}
           {totalPages > 1 && (
-            <div className="flex items-center space-x-1">
+            <div className="hidden sm:flex items-center gap-1">
               {getVisiblePages().slice(0, 5).map((page, index) => {
                 if (page === '...') {
                   return (
@@ -167,7 +167,7 @@ const Pagination: React.FC<PaginationProps> = ({
                     key={pageNumber}
                     onClick={() => handlePageClick(pageNumber)}
                     className={`
-                      px-3 py-1 text-sm font-medium rounded-lg transition-all duration-200
+                      px-2 py-1 sm:px-3 sm:py-1 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200
                       ${isActive
                         ? 'bg-[var(--primary)] text-[var(--primary-foreground)] shadow-md'
                         : 'text-[var(--muted-foreground)] hover:bg-[var(--muted)] hover:text-[var(--primary)]'
@@ -191,18 +191,18 @@ const Pagination: React.FC<PaginationProps> = ({
         >
           <Button
             variant={currentPage < totalPages ? "primary" : "ghost"}
-            size="lg"
+            size="sm"
             onClick={handleNextPage}
             disabled={currentPage >= totalPages}
             icon={
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             }
             iconPosition="right"
-            className="px-6 py-3 font-semibold"
+            className="px-4 py-2 sm:px-6 sm:py-3 font-semibold w-full sm:w-auto"
           >
-            Next
+            <span className="sm:inline">Next</span>
           </Button>
         </motion.div>
       </div>

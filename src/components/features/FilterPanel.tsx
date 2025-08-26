@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Card, { CardHeader, CardTitle, CardContent } from '../ui/Card';
+import Card, { CardContent } from '../ui/Card';
 import Button from '../ui/Button';
 import Badge from '../ui/Badge';
 import type { FilterState, WorkAvailability } from '../../types/applicant.types';
@@ -79,7 +79,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 
   if (isCollapsed) {
     return (
-      <Card className="mb-4">
+      <Card variant="glass" className="mb-4">
         <CardContent className="py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -104,29 +104,10 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
   }
 
   return (
-    <Card className="mb-6">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center space-x-2">
-            <span>Filters</span>
-            {activeFiltersCount > 0 && (
-              <Badge variant="info" size="sm">
-                {activeFiltersCount}
-              </Badge>
-            )}
-          </CardTitle>
-          <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="sm" onClick={onToggleCollapse}>
-              Hide
-            </Button>
-          </div>
-        </div>
-      </CardHeader>
-
-      <CardContent className="space-y-6">
+    <div className="space-y-6">
         {/* Search */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
             Search
           </label>
           <input
@@ -134,13 +115,13 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
             value={localFilters.search}
             onChange={(e) => handleInputChange('search', e.target.value)}
             placeholder="Search by name, skills, company..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-3 py-2 bg-[var(--muted)] border border-[var(--border)] rounded-md text-[var(--foreground)] placeholder:text-[var(--foreground)]/60 focus:outline-none focus:ring-2 focus:ring-[var(--ring)] focus:border-[var(--primary)]"
           />
         </div>
 
         {/* Location Filter */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
             Location
           </label>
           <div className="max-h-32 overflow-y-auto space-y-1">
@@ -150,9 +131,9 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                   type="checkbox"
                   checked={localFilters.locations.includes(location)}
                   onChange={() => handleArrayToggle('locations', location)}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-[var(--border)] text-[var(--primary)] focus:ring-[var(--ring)]"
                 />
-                <span className="text-sm text-gray-700">{location}</span>
+                <span className="text-sm text-[var(--foreground)]">{location}</span>
               </label>
             ))}
           </div>
@@ -160,7 +141,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 
         {/* Work Availability */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
             Work Availability
           </label>
           <div className="space-y-1">
@@ -170,9 +151,9 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                   type="checkbox"
                   checked={localFilters.workAvailability.includes(availability)}
                   onChange={() => handleArrayToggle('workAvailability', availability)}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-[var(--border)] text-[var(--primary)] focus:ring-[var(--ring)]"
                 />
-                <span className="text-sm text-gray-700 capitalize">
+                <span className="text-sm text-[var(--foreground)] capitalize">
                   {availability.replace('-', ' ')}
                 </span>
               </label>
@@ -182,7 +163,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 
         {/* Experience Range */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
             Minimum Experience (roles)
           </label>
           <input
@@ -191,9 +172,9 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
             max="10"
             value={localFilters.minExperience}
             onChange={(e) => handleInputChange('minExperience', parseInt(e.target.value))}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+            className="w-full h-2 bg-[var(--muted)] rounded-lg appearance-none cursor-pointer"
           />
-          <div className="flex justify-between text-xs text-gray-500 mt-1">
+          <div className="flex justify-between text-xs text-[var(--foreground)] mt-1">
             <span>0</span>
             <span className="font-medium">{localFilters.minExperience} roles</span>
             <span>10+</span>
@@ -202,7 +183,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 
         {/* Salary Range */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
             Maximum Salary Expectation
           </label>
           <input
@@ -212,9 +193,9 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
             step="10000"
             value={localFilters.maxSalary}
             onChange={(e) => handleInputChange('maxSalary', parseInt(e.target.value))}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+            className="w-full h-2 bg-[var(--muted)] rounded-lg appearance-none cursor-pointer"
           />
-          <div className="flex justify-between text-xs text-gray-500 mt-1">
+          <div className="flex justify-between text-xs text-[var(--foreground)] mt-1">
             <span>$30k</span>
             <span className="font-medium">
               ${localFilters.maxSalary === 999999 ? 'No limit' : `${(localFilters.maxSalary / 1000).toFixed(0)}k`}
@@ -225,7 +206,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 
         {/* Education Level */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
             Education Level
           </label>
           <div className="space-y-1 max-h-24 overflow-y-auto">
@@ -235,9 +216,9 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                   type="checkbox"
                   checked={localFilters.educationLevel.includes(level)}
                   onChange={() => handleArrayToggle('educationLevel', level)}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-[var(--border)] text-[var(--primary)] focus:ring-[var(--ring)]"
                 />
-                <span className="text-sm text-gray-700">{level}</span>
+                <span className="text-sm text-[var(--foreground)]">{level}</span>
               </label>
             ))}
           </div>
@@ -245,7 +226,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 
         {/* Skills */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
             Skills (top skills)
           </label>
           <div className="max-h-32 overflow-y-auto">
@@ -256,9 +237,9 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                     type="checkbox"
                     checked={localFilters.skills.includes(skill)}
                     onChange={() => handleArrayToggle('skills', skill)}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="rounded border-[var(--border)] text-[var(--primary)] focus:ring-[var(--ring)]"
                   />
-                  <span className="text-xs text-gray-700 truncate">{skill}</span>
+                  <span className="text-xs text-[var(--foreground)] truncate">{skill}</span>
                 </label>
               ))}
             </div>
@@ -267,7 +248,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 
         {/* Status Filters */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
             Status
           </label>
           <div className="space-y-2">
@@ -276,24 +257,24 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                 type="checkbox"
                 checked={localFilters.isShortlisted === true}
                 onChange={(e) => handleInputChange('isShortlisted', e.target.checked ? true : null)}
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="rounded border-[var(--border)] text-[var(--primary)] focus:ring-[var(--ring)]"
               />
-              <span className="text-sm text-gray-700">Show only shortlisted</span>
+              <span className="text-sm text-[var(--foreground)]">Show only shortlisted</span>
             </label>
             <label className="flex items-center space-x-2">
               <input
                 type="checkbox"
                 checked={localFilters.isSelected === true}
                 onChange={(e) => handleInputChange('isSelected', e.target.checked ? true : null)}
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="rounded border-[var(--border)] text-[var(--primary)] focus:ring-[var(--ring)]"
               />
-              <span className="text-sm text-gray-700">Show only selected</span>
+              <span className="text-sm text-[var(--foreground)]">Show only selected</span>
             </label>
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center justify-between pt-4 border-t">
+        <div className="flex items-center justify-between pt-4 border-t border-[var(--border)] border-[var(--border)]">
           <Button variant="secondary" onClick={resetFilters}>
             Reset All
           </Button>
@@ -301,8 +282,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
             Apply Filters
           </Button>
         </div>
-      </CardContent>
-    </Card>
+    </div>
   );
 };
 

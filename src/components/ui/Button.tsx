@@ -24,12 +24,12 @@ const Button: React.FC<ButtonProps> = ({
   const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden';
   
   const variantClasses = {
-    primary: 'bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white focus:ring-blue-500 shadow-sm hover:shadow-md',
-    secondary: 'bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-900 focus:ring-slate-500 border border-slate-200',
-    success: 'bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white focus:ring-emerald-500 shadow-sm hover:shadow-md',
-    danger: 'bg-red-600 hover:bg-red-700 active:bg-red-800 text-white focus:ring-red-500 shadow-sm hover:shadow-md',
-    ghost: 'bg-transparent hover:bg-slate-100 active:bg-slate-200 text-slate-700 focus:ring-slate-500',
-    gradient: 'gradient-primary text-white focus:ring-blue-500 shadow-lg hover:shadow-xl',
+    primary: 'bg-primary hover:bg-primary/90 active:bg-primary/80 text-primary-foreground focus:ring-ring shadow-sm hover:shadow-md',
+    secondary: 'bg-secondary hover:bg-secondary/90 active:bg-secondary/80 text-secondary-foreground focus:ring-ring border border-border',
+    success: 'bg-accent hover:bg-accent/90 active:bg-accent/80 text-accent-foreground focus:ring-ring shadow-sm hover:shadow-md',
+    danger: 'bg-destructive hover:bg-destructive/90 active:bg-destructive/80 text-destructive-foreground focus:ring-ring shadow-sm hover:shadow-md',
+    ghost: 'bg-transparent hover:bg-muted active:bg-muted/80 text-foreground focus:ring-ring',
+    gradient: 'bg-primary text-primary-foreground focus:ring-ring shadow-lg hover:shadow-xl hover:bg-primary/90',
   };
   
   const sizeClasses = {

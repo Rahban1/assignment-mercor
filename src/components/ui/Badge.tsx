@@ -22,23 +22,23 @@ const Badge: React.FC<BadgeProps> = ({
   const baseClasses = 'inline-flex items-center font-medium rounded-full transition-all duration-200';
   
   const variantClasses = {
-    default: 'bg-slate-100 text-slate-700 border border-slate-200',
-    success: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
-    warning: 'bg-amber-50 text-amber-700 border border-amber-200',
-    danger: 'bg-red-50 text-red-700 border border-red-200',
-    info: 'bg-blue-50 text-blue-700 border border-blue-200',
-    secondary: 'bg-purple-50 text-purple-700 border border-purple-200',
-    gradient: 'gradient-primary text-white shadow-sm',
+    default: 'bg-muted/60 text-muted-foreground border border-border backdrop-blur-sm hover:bg-muted transition-colors',
+    success: 'bg-accent/60 text-accent-foreground border border-border backdrop-blur-sm hover:bg-accent transition-colors',
+    warning: 'bg-secondary/60 text-secondary-foreground border border-border backdrop-blur-sm hover:bg-secondary transition-colors',
+    danger: 'bg-destructive/60 text-destructive-foreground border border-border backdrop-blur-sm hover:bg-destructive transition-colors',
+    info: 'bg-primary/20 text-primary-foreground border border-border backdrop-blur-sm hover:bg-primary/30 transition-colors',
+    secondary: 'bg-muted text-muted-foreground border border-transparent hover:bg-muted/80 transition-colors',
+    gradient: 'bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 transition-all',
   };
 
   const glowClasses = glow ? {
-    default: 'shadow-slate-200/50',
-    success: 'shadow-emerald-200/50',
-    warning: 'shadow-amber-200/50',
-    danger: 'shadow-red-200/50',
-    info: 'shadow-blue-200/50',
-    secondary: 'shadow-purple-200/50',
-    gradient: 'shadow-blue-300/50',
+    default: 'shadow-lg shadow-muted/25',
+    success: 'shadow-lg shadow-accent/25',
+    warning: 'shadow-lg shadow-secondary/25',
+    danger: 'shadow-lg shadow-destructive/25',
+    info: 'shadow-lg shadow-primary/25',
+    secondary: 'shadow-lg shadow-secondary/25',
+    gradient: 'shadow-lg shadow-primary/25',
   } : {};
   
   const sizeClasses = {
@@ -134,7 +134,7 @@ const ScoreBadge: React.FC<ScoreBadgeProps> = ({
       </Badge>
       {showLabel && (
         <motion.span 
-          className="text-xs text-slate-500 font-medium"
+          className="text-xs text-muted-foreground font-medium"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}

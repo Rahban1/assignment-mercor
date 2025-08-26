@@ -1,9 +1,12 @@
 
 import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'sonner';
 import { useHiringStore } from './store';
 import { processRawApplicants, normalizeSkills, normalizeSalaryExpectations } from './utils/data-processing';
 import Dashboard from './pages/Dashboard';
+import SelectionPage from './pages/SelectionPage';
+import { ThemeProvider } from './contexts/ThemeContext';
 import './App.css';
 
 function App() {
@@ -69,18 +72,20 @@ function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-lg text-gray-600">Initializing hiring platform...</p>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-lg text-muted-foreground">Initializing hiring platform...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-50">
+    <ThemeProvider>
+      <Router>
+        <div className="min-h-screen bg-background">
+        <Toaster richColors position="top-right" />
         <Routes>
           {/* Main Dashboard Route */}
           <Route path="/" element={<Dashboard />} />
@@ -92,8 +97,8 @@ function App() {
             element={
               <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4">Candidate Detail</h2>
-                  <p className="text-gray-600">This page will show detailed candidate information</p>
+                  <h2 className="text-2xl font-bold text-foreground mb-4">Candidate Detail</h2>
+                  <p className="text-muted-foreground">This page will show detailed candidate information</p>
                 </div>
               </div>
             } 
@@ -102,14 +107,7 @@ function App() {
           {/* Team Selection Route */}
           <Route 
             path="/selection" 
-            element={
-              <div className="min-h-screen flex items-center justify-center">
-                <div className="text-center">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4">Team Selection</h2>
-                  <p className="text-gray-600">This page will show the final team selection interface</p>
-                </div>
-              </div>
-            } 
+            element={<SelectionPage />} 
           />
           
           {/* Analytics/Reports Route */}
@@ -118,8 +116,8 @@ function App() {
             element={
               <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4">Reports & Analytics</h2>
-                  <p className="text-gray-600">This page will show hiring analytics and diversity reports</p>
+                  <h2 className="text-2xl font-bold text-foreground mb-4">Reports & Analytics</h2>
+                  <p className="text-muted-foreground">This page will show hiring analytics and diversity reports</p>
                 </div>
               </div>
             } 
@@ -128,8 +126,9 @@ function App() {
           {/* Redirect unknown routes to dashboard */}
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
-      </div>
-    </Router>
+        </div>
+      </Router>
+    </ThemeProvider>
   );
 }
 

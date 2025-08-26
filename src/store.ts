@@ -121,14 +121,14 @@ export const useHiringStore = create<HiringState>()(
       },
 
       // Selection actions
-      selectCandidate: (applicantId: string, position: string, reason: string, diversityFactor?: string) => {
+      selectCandidate: (applicantId: string, position: string, reason: string, diversityFactor?: "location" | "education" | "experience" | "skills") => {
         const selected = { ...get().selected };
         selected[applicantId] = {
           applicantId,
           selectedAt: new Date(),
           position,
           reason,
-          diversityFactor: diversityFactor as string,
+          diversityFactor,
         };
         set({ selected });
       },

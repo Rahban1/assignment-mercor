@@ -2,7 +2,8 @@ import {
   type RawApplicant, 
   RawApplicantSchema, 
   type Applicant, 
-  ApplicantSchema 
+  ApplicantSchema,
+  type WorkAvailability
 } from "../types/applicant.types";
 // Simple ID generator (replace with uuid if needed)
 const generateId = () => `applicant_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -54,7 +55,7 @@ function transformRawToApplicant(raw: RawApplicant, index: number): Partial<Appl
     phone: raw.phone || "",
     location: raw.location || "Unknown",
     submitted_at: raw.submitted_at ? new Date(raw.submitted_at) : new Date(),
-    work_availability: (raw.work_availability || ["full-time"]) as string[],
+    work_availability: (raw.work_availability || ["full-time"]) as WorkAvailability[],
     annual_salary_expectation: raw.annual_salary_expectation || { "full-time": "$0" },
     work_experiences: (raw.work_experiences || []).map(exp => ({
       company: exp.company || "Unknown Company",
